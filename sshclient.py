@@ -3,8 +3,11 @@
 import socket
 import threading
 import os
+import sys
+import readline
 
-HOST = '127.0.0.1'
+HOST = sys.argv[1]
+print (sys.argv)
 PORT = 1234
 run = False
 
@@ -30,7 +33,7 @@ def receive(s):
 def _exit(s):
     global run
     run = False
-    s.send(b"exit")
+    s.send("exit".encode("utf8"))
     s.shutdown(socket.SHUT_RDWR)
     exit(0)
 
@@ -49,8 +52,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     os.system(command[1])
                 elif inputs == "exitnow":
                     _exit(s)
-                elif inputs == "cd":
-                    pass
                 else:
                     s.send(inputs.encode("utf8"))
             except KeyboardInterrupt:
