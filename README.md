@@ -1,5 +1,5 @@
 # PythonSSH
-Custom ssh client and server made with python 3
+Custom ssh client and server made with python 3 using sockets
 
 ## Client:
 - Run command:  ```python3 sshclient.py <Server IP>```
